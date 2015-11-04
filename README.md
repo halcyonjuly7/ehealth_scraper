@@ -1,23 +1,25 @@
 ## how to use
 
 ### make sure you have scrapy installed these:
-pip install scrapyd
-pip install beautifulsoup4
-pip install lxml
-pip install chardet
-pip install cssselect
+	pip install scrapyd
+	pip install beautifulsoup4
+	pip install lxml
+	pip install chardet
+	pip install cssselect
 
 
 ### play around with scrapy to understand how it does css or xpath selection 
 - it's the same as beautiful soup or jsoup, or lxml, or other html parsers
-cd ehealth
-scrapy shell http://ehealthforum.com/health/epilepsy.html
-response.xpath("//h1")
-response.css(".fp_h2")
-ctrl-Z to exit the shell
+	cd ehealth
+	scrapy shell http://ehealthforum.com/health/epilepsy.html
+	response.xpath("//h1")
+	response.css(".fp_h2")
+	ctrl-Z to exit the shell
 
 ### run a crawler
-scrapy crawl epilepsy_ehealthforums_spider
+
+	scrapy crawl epilepsy_ehealthforums_spider
+
 you see that items are being logged
 
 
