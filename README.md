@@ -10,9 +10,9 @@
 
 ### play around with scrapy to understand how it does css or xpath selection 
 
-- it's the same as beautiful soup or jsoup, or lxml, or other html parsers
+It's the same as beautiful soup or jsoup, or lxml, or other html parsers
 
-	cd ehealth
+	cd ehealth;
 	scrapy shell http://ehealthforum.com/health/epilepsy.html
 	response.xpath("//h1")
 	response.css(".fp_h2")
