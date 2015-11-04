@@ -9,6 +9,7 @@
 
 
 ### play around with scrapy to understand how it does css or xpath selection 
+
 - it's the same as beautiful soup or jsoup, or lxml, or other html parsers
 
 	cd ehealth
