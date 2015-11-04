@@ -10,6 +10,7 @@
 
 ### play around with scrapy to understand how it does css or xpath selection 
 - it's the same as beautiful soup or jsoup, or lxml, or other html parsers
+
 	cd ehealth
 	scrapy shell http://ehealthforum.com/health/epilepsy.html
 	response.xpath("//h1")
@@ -38,5 +39,6 @@ for this spider, there's only 1 rule, because it turns out that the rule to hand
 
 ## For more information
 see http://doc.scrapy.org/en/latest/topics/api.html
+and https://github.com/Axiologue/ShoeScraper
 
 
