@@ -19,7 +19,7 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, lik
 
 ITEM_PIPELINES = {
 #     'forum.pipelines.DuplicatesLinksPipeline': 300,
-    'forum.fluentd_pipelines.FluentdPipeline': 400
+    # 'forum.fluentd_pipelines.FluentdPipeline': 400
 }
 
 COOKIES_ENABLED = True
