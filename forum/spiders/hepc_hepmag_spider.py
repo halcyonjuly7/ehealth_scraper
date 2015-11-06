@@ -43,14 +43,17 @@ class ForumsSpider(CrawlSpider):
         )
     
     def urlRemove(self,url,keyToRemove):
-        urlcomponents = urlparse.urlparse(url)
-        params=urlparse.parse_qs(urlcomponents.query)
-        newparams=""
-        for key in params.keys():
-            if not key==keyToRemove:
-                newparams = newparams+ key+"="+params.get(key)[0]
-        urlcomponents.query = newparams
-        return urlparse.urlunparse(urlcomponents)
+        try:
+            urlcomponents = urlparse.urlparse(url)
+            params=urlparse.parse_qs(urlcomponents.query)
+            newparams=""
+            for key in params.keys():
+                if not key==keyToRemove:
+                    newparams = newparams+ key+"="+params.get(key)[0]
+            urlcomponents.query = newparams
+            return urlparse.urlunparse(urlcomponents)
+        except Exception as e:
+            return url
 
     def cleanText(self,text):
         soup = BeautifulSoup(text,'html.parser')
