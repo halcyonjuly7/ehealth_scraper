@@ -2,7 +2,7 @@ import scrapy
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.selector import Selector
-from forum.items import PostItemsList
+from forum.items import PostItem
 import re
 import logging
 from bs4 import BeautifulSoup
@@ -33,9 +33,9 @@ class ForumsSpider(CrawlSpider):
             # Rule to go to the single product pages and run the parsing function
             # Excludes links that end in _W.html or _M.html, because they point to 
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
-#             Rule(LinkExtractor(
-#                 restrict_xpaths='//tr/td[contains(@class,"TopicTitle")]/a/@href',
-#                 ), callback='parsePost'),
+            Rule(LinkExtractor(
+                restrict_xpaths='//tr/td[contains(@class,"TopicTitle")]/a',
+                ), callback='parsePost'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
                 restrict_xpaths="//tr[td[contains(., 'forums')]][last()]/td[contains(., 'forums')]/br/a/@href",
@@ -52,7 +52,7 @@ class ForumsSpider(CrawlSpider):
         topic = response.xpath('//div[contains(@id,"PageTitle")]/h1/text()').extract()[0]
         url = response.url
         for post in posts:
-            item = PostItemsList()
+            item = PostItem()
             item['author'] = post.css('.msgUser').xpath("./a[2]").xpath("text()").extract()[0]
             item['author_link']=post.css('.msgUser').xpath("./a[2]/@href").extract()[0]
             item['create_date']= re.sub(" +|\n|\r|\t|\0|\x0b|\xa0",' ',response.css('td.msgThreadInfo').xpath('text()').extract()[0]).strip()
