@@ -40,6 +40,9 @@ class ForumsSpider(CrawlSpider):
             Rule(LinkExtractor(
                 restrict_xpaths="//tr[td[contains(., 'forums')]][last()]/td[contains(., 'forums')]/br/a",
             ), follow=True),
+            Rule(LinkExtractor(
+                restrict_xpaths='//a[contains(@href,"/community/default.aspx?f=23&p=")]',
+            ), follow=True),
         )
 
     # https://github.com/scrapy/dirbot/blob/master/dirbot/spiders/dmoz.py
