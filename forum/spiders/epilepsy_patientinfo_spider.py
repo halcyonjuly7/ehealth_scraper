@@ -41,16 +41,17 @@ class ForumsSpider(CrawlSpider):
         sel = Selector(response)
         posts = sel.xpath('//div[@id="topic-replies"]//article[contains(@class,"post")]')
         items = []
+        condition=sel.xpath("//h1[contains(@class,'title')")
         topic = response.xpath('//h1[@class="title"]/text()').extract_first()
         url = response.url
         
         item = PostItemsList()
         item['author'] = response.xpath('//div[@id="topic"]/div[@class="avatar"]/a/p/strong[1]/text()').extract_first()
         item['author_link'] = response.xpath('//div[@id="topic"]/div[@class="avatar"]/a/@href').extract_first()
+        item['condition']=condition
         item['create_date'] = response.xpath('//div[@id="topic"]//article//time/@datetime').extract_first().strip()
-        
         item['post'] = re.sub('\s+',' '," ".join(response.xpath('//div[@id="topic"]//div[@class="post-content break-word"]/p/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-        item['tag']='epilepsy'
+        item['tag']=''
         item['topic'] = topic
         item['url']=url
         logging.info(item.__str__)
@@ -60,9 +61,10 @@ class ForumsSpider(CrawlSpider):
             item = PostItemsList()
             item['author'] = post.xpath('./span[@class="post-username"]/a/text()').extract_first()
             item['author_link'] = post.xpath('./span[@class="post-username"]/a/@href').extract_first()
+            item['condition']=condition
             item['create_date'] = post.xpath('.//time/@datetime').extract_first()
             item['post'] = re.sub('\s+',' '," ".join(post.xpath('./div[@class="post-content break-word"]/p/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-            item['tag']='epilepsy'
+            item['tag']=''
             item['topic'] = topic
             item['url']=url
             logging.info(item.__str__)
