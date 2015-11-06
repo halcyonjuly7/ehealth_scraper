@@ -16,4 +16,4 @@ class PostItemsList(scrapy.Item):
     topic=scrapy.Field()
     tag=scrapy.Field()
     url = scrapy.Field()
-    
+    condition=scrapy.Field()    

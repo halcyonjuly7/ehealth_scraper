@@ -1,3 +1,5 @@
+.scrapy
+*.pyc
 .project
 .pydevproject
 .settings

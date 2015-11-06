@@ -21,7 +21,7 @@ from bs4 import BeautifulSoup
 # Spider for crawling Adidas website for shoes
 class ForumsSpider(CrawlSpider):
     name = "epilepsy_healingwell_spider"
-    allowed_domains = ["healingwell.com"]
+    allowed_domains = ["www.healingwell.com"]
     start_urls = [
         "http://www.healingwell.com/community/default.aspx?f=23&m=1001057",
     ]
@@ -37,21 +37,24 @@ class ForumsSpider(CrawlSpider):
                 restrict_xpaths='//tr/td[contains(@class,"TopicTitle")]/a',
                 ), callback='parsePost'),
             # Rule to follow arrow to next product grid
+            #Rule(LinkExtractor(
+            #    restrict_xpaths="//tr[td[contains(., 'forums')]][last()]/td[contains(., 'forums')]/br/a",
+            #), follow=True),
             Rule(LinkExtractor(
-                restrict_xpaths="//tr[td[contains(., 'forums')]][last()]/td[contains(., 'forums')]/br/a",
-            ), follow=True),
-            Rule(LinkExtractor(
-                restrict_xpaths='//a[contains(@href,"/community/default.aspx?f=23&p=")]',
+                restrict_xpaths='//a',
             ), follow=True),
         )
 
     # https://github.com/scrapy/dirbot/blob/master/dirbot/spiders/dmoz.py
     # https://github.com/scrapy/dirbot/blob/master/dirbot/pipelines.py
-    def parse(self,response):
+    def parsePost(self,response):
         logging.info(response)
         sel = Selector(response)
         posts = sel.css("Table.PostBox")
-        items = []
+        breadcrumbs = sel.css("#Breadcrumbs")
+	#condition = breadcrumbs.xpath("./a[3]/text()")
+	condition = breadcrumbs.xpath("./a[3]/text()").extract()[0]
+	items = []
         topic = response.xpath('//div[contains(@id,"PageTitle")]/h1/text()').extract()[0]
         url = response.url
         for post in posts:
@@ -66,6 +69,7 @@ class ForumsSpider(CrawlSpider):
             item['tag']='epilepsy'
             item['topic'] = topic
             item['url']=url
-            logging.info(post_msg)
+            item['condition']=condition
+	    logging.info(post_msg)
             items.append(item)
         return items
