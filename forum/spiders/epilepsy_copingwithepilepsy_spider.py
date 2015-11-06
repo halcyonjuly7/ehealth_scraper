@@ -39,8 +39,10 @@ class ForumsSpider(CrawlSpider):
     # https://github.com/scrapy/dirbot/blob/master/dirbot/pipelines.py
     def parsePostsList(self,response):
         sel = Selector(response)
+
         posts = sel.xpath('//div[@id="posts"]//div[@class="page"]')
         items = []
+        condition="epilepsy"
         topic = response.xpath('//h1/strong/text()').extract_first().strip()
         url = response.url
         for post in posts:
@@ -51,10 +53,10 @@ class ForumsSpider(CrawlSpider):
             if not item['author']:
                 item['author'] = post.xpath('.//a[@class="bigusername"]/b/font/text()').extract_first()
             item['author_link'] = post.xpath('.//a[@class="bigusername"]/@href').extract_first()
+            item['condition']=condition
             item['create_date'] = post.xpath('.//td[@class="thead"]/div[2]').extract_first()
             p = re.compile(r'<.*?>')
             item['create_date'] = p.sub('',item['create_date']).strip()
-            
             item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//td[@class="alt1"]/div/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
             item['tag'] ='epilepsy'
             item['topic'] = topic
