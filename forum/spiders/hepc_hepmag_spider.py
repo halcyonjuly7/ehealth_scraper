@@ -2,7 +2,7 @@ import scrapy
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.selector import Selector
-from forum.items import PostItemsList
+from forum.items import PostItem
 import re
 import logging
 import lxml.html
@@ -10,6 +10,7 @@ from lxml.etree import ParserError
 from lxml.cssselect import CSSSelector
 from bs4 import BeautifulSoup
 import urlparse
+import urllib
 
 
 ## LOGGING to file
@@ -42,18 +43,16 @@ class ForumsSpider(CrawlSpider):
                 ), follow=True),
         )
     
-    def urlRemove(self,url,keyToRemove):
-        try:
-            urlcomponents = urlparse.urlparse(url)
-            params=urlparse.parse_qs(urlcomponents.query)
-            newparams=""
-            for key in params.keys():
-                if not key==keyToRemove:
-                    newparams = newparams+ key+"="+params.get(key)[0]
-            urlcomponents.query = newparams
-            return urlparse.urlunparse(urlcomponents)
-        except Exception as e:
-            return url
+    def urlRemove(self,url,keyToFind):
+        url_parts = list(urlparse.urlparse(url))
+        query = dict(urlparse.parse_qsl(url_parts[4]))
+        
+        for q in query.keys():
+            if q == keyToFind:
+                query.pop(q,None)
+        url_parts[4] = urllib.urlencode(query)
+        return urlparse.urlunparse(url_parts)
+    
 
     def cleanText(self,text):
         soup = BeautifulSoup(text,'html.parser')
@@ -72,7 +71,7 @@ class ForumsSpider(CrawlSpider):
         items =[]
         postWrappers = CSSSelector('.post_wrapper')(document)
         for postWrapper in postWrappers:
-            post = PostItemsList()
+            post = PostItem()
             keyinfo = postWrapper.cssselect(".keyinfo")[0]
             poster = postWrapper.cssselect(".poster")[0]
             post['author'] = poster.xpath("./h4/a/text()")[0]
@@ -84,4 +83,3 @@ class ForumsSpider(CrawlSpider):
             items.append(post)
         return items
         
-
