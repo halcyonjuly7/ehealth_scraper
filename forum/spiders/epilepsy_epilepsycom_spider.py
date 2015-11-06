@@ -41,10 +41,11 @@ class ForumsSpider(CrawlSpider):
         items = []
         topic = response.xpath('//div[@class="panel-pane pane-node-title no-title block"]//h2/text()').extract_first()
         url = response.url
-        
+        condition="epilepsy"
         item = PostItemsList()
         item['author'] = response.xpath('//div[@class="panel-pane pane-node-author no-title block"]/div/div/text()').extract_first().strip()
         item['author_link'] = ''
+        item['condition']=condition
         item['post'] = re.sub('\s+',' '," ".join(response.xpath('//div[@class="panel-pane pane-entity-field pane-node-field-body no-title block"]//div[@class="field-item even"]/p/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
         item['tag']='epilepsy'
         item['topic'] = topic

@@ -40,6 +40,7 @@ class ForumsSpider(CrawlSpider):
     def parsePostsList(self,response):
         sel = Selector(response)
         posts = sel.xpath('//div[contains(@id,"edit")]')
+        condition = sel.css(".navbar").xpath("./span[2]/a/text()").extract()[0]
         items = []
         topic = response.xpath('//div[@class="navbar"]/strong/text()').extract_first().strip()
         url = response.url
@@ -47,6 +48,7 @@ class ForumsSpider(CrawlSpider):
             item = PostItemsList()
             item['author'] = post.xpath('.//div[contains(@id,"postmenu")]/text()').extract_first().strip()
             item['author_link'] = ''
+            item['condition'] = condition
             item['create_date'] = post.xpath('.//td[@class="thead"][1]').extract_first()
             p = re.compile(r'<.*?>')
             item['create_date'] = p.sub('',item['create_date']).strip()

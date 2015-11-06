@@ -41,12 +41,14 @@ class ForumsSpider(CrawlSpider):
         sel = Selector(response)
         posts = sel.xpath('//table[@class="tablebg "]')
         items = []
+        condition="epilepsy"
         topic = response.xpath('//h2/a[@class="titles"]/text()').extract_first()
         url = response.url
         for post in posts:
             item = PostItemsList()
             item['author'] = post.xpath('.//b[@class="postauthor"]/text()').extract_first()
             item['author_link']=post.xpath('.//div[@class="gensmall" and @style="float: left;"]/a/@href').extract_first()
+            item['condition']=condition
             item['create_date'] = post.xpath('.//td[@class="gensmall" and @width="100%"]/div[@style="float: right;"]/text()').extract_first().strip()
 
             item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="postbody"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))

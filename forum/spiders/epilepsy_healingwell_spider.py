@@ -25,9 +25,6 @@ class ForumsSpider(CrawlSpider):
     start_urls = [
         "http://www.healingwell.com/community/default.aspx?f=23&m=1001057",
     ]
-#     start_urls = [
-#         "http://www.healingwell.com/community/default.aspx?f=23",
-#     ]
 
     rules = (
             # Rule to go to the single product pages and run the parsing function
