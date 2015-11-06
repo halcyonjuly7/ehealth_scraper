@@ -2,7 +2,7 @@ import scrapy
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.selector import Selector
-from forum.items import PostItem
+from forum.items import PostItemsList
 import re
 import logging
 from bs4 import BeautifulSoup
@@ -52,7 +52,7 @@ class ForumsSpider(CrawlSpider):
         topic = response.xpath('//div[contains(@id,"PageTitle")]/h1/text()').extract()[0]
         url = response.url
         for post in posts:
-            item = PostItem()
+            item = PostItemsList()
             item['author'] = post.css('.msgUser').xpath("./a[2]").xpath("text()").extract()[0]
             item['author_link']=post.css('.msgUser').xpath("./a[2]/@href").extract()[0]
             item['create_date']= re.sub(" +|\n|\r|\t|\0|\x0b|\xa0",' ',response.css('td.msgThreadInfo').xpath('text()').extract()[0]).strip()
