@@ -53,7 +53,7 @@ class ForumsSpider(CrawlSpider):
                 if not item['author']:
                     item['author'] = post.xpath('.//a[@data-t="post-usersntxt"]/text()').extract_first()
                     item['author_link'] = post.xpath('.//a[@data-t="post-usersntxt"]/@href').extract_first()
-
+                item['condition']='epilepsy'
                 item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="x-post-content"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
                 item['tag']='epilepsy'
                 item['topic'] = topic
