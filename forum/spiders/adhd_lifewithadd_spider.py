@@ -16,7 +16,7 @@ import logging
 
 # Spider for crawling Adidas website for shoes
 class ForumsSpider(CrawlSpider):
-    name = "epilepsy_lifewithadd_spider"
+    name = "adhd_lifewithadd_spider"
     allowed_domains = ["www.lifewithadd.org"]
     start_urls = [
         "http://www.lifewithadd.org/forum/categories/general/listForCategory",
@@ -47,12 +47,12 @@ class ForumsSpider(CrawlSpider):
         item = PostItemsList()
         item['author'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[contains(@href,"profile")]/text()').extract_first()
         item['author_link'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[contains(@href,"profile")]/@href').extract_first()
+        item['condition']='adhd'
         item['create_date'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[@class="nolink"][2]/text()').extract_first().replace('on','').replace('in','').strip()
-
         item['post'] = re.sub('\s+',' '," ".join(response.xpath('//div[@class="xg_module xg_module_with_dialog"]//div[@class="xg_user_generated"]/p/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
         if not item['post']:
             item['post'] = re.sub('\s+',' '," ".join(response.xpath('//div[@class="xg_module xg_module_with_dialog"]//div[@class="xg_user_generated"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-        item['tag']='epilepsy'
+        item['tag']='adhd'
         item['topic'] = topic
         item['url']=url
         logging.info(item.__str__)
@@ -67,7 +67,7 @@ class ForumsSpider(CrawlSpider):
 
             if not item['post']:
                 item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="description"]/div[@class="xg_user_generated"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-            item['tag']='epilepsy'
+            item['tag']='adhd'
             item['topic'] = topic
             item['url']=url
             logging.info(item.__str__)
