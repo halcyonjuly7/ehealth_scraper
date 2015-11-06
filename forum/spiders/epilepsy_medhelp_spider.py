@@ -30,8 +30,6 @@ class ForumsSpider(CrawlSpider):
                     restrict_xpaths='//div[@class="fonts_resizable_subject subject_title "]/a',
                 ), callback='parsePostsList'),
 
-            
-
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
                     restrict_xpaths='//div[@id="pagination_nav"]/a[@class="msg_next_page"]'
@@ -42,6 +40,7 @@ class ForumsSpider(CrawlSpider):
     # https://github.com/scrapy/dirbot/blob/master/dirbot/pipelines.py
     def parsePostsList(self,response):
         sel = Selector(response)
+        condition='epilepsy'
         posts = sel.xpath('//div[@class="post_message_container"]')
         items = []
         topic = response.xpath('//div[@class="question_title"]/text()').extract_first()
@@ -50,6 +49,7 @@ class ForumsSpider(CrawlSpider):
             item = PostItemsList()
             item['author'] = post.xpath('.//div[@class="post_byline"]/a/text()').extract_first()
             item['author_link'] = post.xpath('.//div[@class="post_byline"]/a/@href').extract_first()
+            item['condition']='epilepsy'
             item['create_date'] = post.xpath('.//div[@class="post_byline"]/span[@class="byline_date"]/text()').extract_first()
             item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="post_message fonts_resizable"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
             item['tag']='epilepsy'
