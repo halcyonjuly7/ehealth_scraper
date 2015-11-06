@@ -38,7 +38,7 @@ class ForumsSpider(CrawlSpider):
                 ), callback='parsePost'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                restrict_xpaths="//tr[td[contains(., 'forums')]][last()]/td[contains(., 'forums')]/br/a/@href",
+                restrict_xpaths="//tr[td[contains(., 'forums')]][last()]/td[contains(., 'forums')]/br/a",
             ), follow=True),
         )
 

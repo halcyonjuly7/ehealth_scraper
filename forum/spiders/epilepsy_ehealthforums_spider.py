@@ -31,7 +31,7 @@ class ForumsSpider(CrawlSpider):
                 ), callback='parsePostsList'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                    restrict_xpaths='//li[@class="pagination_number"]',
+                    restrict_xpaths='//a[@class="pagination_number"]',
                     deny=(r'user_profile_*\.html',)
                 ), follow=True),
         )
