@@ -2,7 +2,7 @@ import scrapy
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.selector import Selector
-from forum.items import PostItem
+from forum.items import PostItemsList
 import re
 import logging
 import lxml.html
@@ -71,7 +71,7 @@ class ForumsSpider(CrawlSpider):
         items =[]
         postWrappers = CSSSelector('.post_wrapper')(document)
         for postWrapper in postWrappers:
-            post = PostItem()
+            post = PostItemsList()
             keyinfo = postWrapper.cssselect(".keyinfo")[0]
             poster = postWrapper.cssselect(".poster")[0]
             post['author'] = poster.xpath("./h4/a/text()")[0]
