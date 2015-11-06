@@ -41,22 +41,19 @@ class ForumsSpider(CrawlSpider):
         sel = Selector(response)
         posts = sel.xpath('//dl[@class="discussion clear i0 xg_lightborder"]')
         items = []
+        
         topic = response.xpath('//h1/text()').extract_first()
         url = response.url
         condition="adhd"
         item = PostItemsList()
         item['author'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[contains(@href,"profile")]/text()').extract_first()
         item['author_link'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[contains(@href,"profile")]/@href').extract_first()
-<<<<<<< HEAD:forum/spiders/adhd_lifewithadd_spider.py
-        item['condition']='adhd'
-=======
-        item['condition']="adhd"
->>>>>>> 9a2d6a1ab1180e297e47252ca9ab8647b162755f:forum/spiders/epilepsy_lifewithadd_spider.py
+        item['condition']=condition
         item['create_date'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[@class="nolink"][2]/text()').extract_first().replace('on','').replace('in','').strip()
         item['post'] = re.sub('\s+',' '," ".join(response.xpath('//div[@class="xg_module xg_module_with_dialog"]//div[@class="xg_user_generated"]/p/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
         if not item['post']:
             item['post'] = re.sub('\s+',' '," ".join(response.xpath('//div[@class="xg_module xg_module_with_dialog"]//div[@class="xg_user_generated"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-        item['tag']='adhd'
+        item['tag']=condition
         item['topic'] = topic
         item['url']=url
         logging.info(item.__str__)
@@ -66,12 +63,12 @@ class ForumsSpider(CrawlSpider):
             item = PostItemsList()
             item['author'] = post.xpath('./dt[@class="byline"]/a[contains(@href,"user")]/text()').extract_first()
             item['author_link'] = post.xpath('./dt[@class="byline"]/a[contains(@href,"user")]/@href').extract_first()
+            item['condition']=condition
             item['create_date'] = post.xpath('./dt[@class="byline"]/span[@class="timestamp"]/text()').extract_first()
             item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="description"]/div[@class="xg_user_generated"]/p/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-
             if not item['post']:
                 item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="description"]/div[@class="xg_user_generated"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-            item['tag']='adhd'
+            item['tag']=condition
             item['topic'] = topic
             item['url']=url
             logging.info(item.__str__)
