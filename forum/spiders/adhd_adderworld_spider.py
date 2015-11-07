@@ -34,10 +34,12 @@ class ForumsSpider(CrawlSpider):
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
             Rule(LinkExtractor(
                     restrict_xpaths='//div[@class="xg_module_body"]//h3/a',
+                    canonicalize=True,
                 ), callback='parsePostsList'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                    restrict_xpaths='//ul[@class="pagination easyclear "]/li[last()-1]/a'
+                    restrict_xpaths='//ul[@class="pagination easyclear "]/li[last()-1]/a',
+                    canonicalize=True,
                 ), follow=True),
         )
 

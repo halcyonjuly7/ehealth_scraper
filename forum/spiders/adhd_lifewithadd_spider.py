@@ -28,10 +28,12 @@ class ForumsSpider(CrawlSpider):
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
             Rule(LinkExtractor(
                     restrict_xpaths='//div[@class="xg_module_body"]//h3/a',
+                    canonicalize=True,
                 ), callback='parsePostsList'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                    restrict_xpaths='//ul[@class="pagination easyclear "]/li[last()-1]/a'
+                    restrict_xpaths='//ul[@class="pagination easyclear "]/li[last()-1]/a',
+                    canonicalize=True,
                 ), follow=True),
         )
 
@@ -44,7 +46,7 @@ class ForumsSpider(CrawlSpider):
         
         topic = response.xpath('//h1/text()').extract_first()
         url = response.url
-        condition="adhd"
+        condition="ADHD"
         item = PostItemsList()
         item['author'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[contains(@href,"profile")]/text()').extract_first()
         item['author_link'] = response.xpath('//div[@class="xg_module xg_module_with_dialog"]//ul[@class="navigation byline"]/li/a[contains(@href,"profile")]/@href').extract_first()

@@ -19,8 +19,10 @@ from bs4 import BeautifulSoup
 # log_observer.start()
 
 # Spider for crawling Adidas website for shoes
+
+# epilepsy, etc
 class ForumsSpider(CrawlSpider):
-    name = "epilepsy_healingwell_spider"
+    name = "all_healingwell_spider"
     allowed_domains = ["www.healingwell.com"]
     start_urls = [
         "http://www.healingwell.com/community/default.aspx?f=23&m=1001057",
@@ -32,6 +34,7 @@ class ForumsSpider(CrawlSpider):
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
             Rule(LinkExtractor(
                 restrict_xpaths='//tr/td[contains(@class,"TopicTitle")]/a',
+                canonicalize=True,
                 ), callback='parsePost'),
             # Rule to follow arrow to next product grid
             # Rule(LinkExtractor(
@@ -39,6 +42,7 @@ class ForumsSpider(CrawlSpider):
             # ), follow=True),
             Rule(LinkExtractor(
                 restrict_xpaths='//a',
+                canonicalize=True,
             ), follow=True),
         )
 
@@ -64,7 +68,7 @@ class ForumsSpider(CrawlSpider):
             soup = BeautifulSoup(post_msg, 'html.parser')
             post_msg = re.sub(" +|\n|\r|\t|\0|\x0b|\xa0", ' ', soup.get_text()).strip()
             item['post'] = post_msg
-            item['tag'] = 'epilepsy'
+            item['tag'] = ''
             item['topic'] = topic
             item['url'] = url
 	    logging.info(post_msg)

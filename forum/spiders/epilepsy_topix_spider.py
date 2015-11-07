@@ -28,10 +28,12 @@ class ForumsSpider(CrawlSpider):
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
             Rule(LinkExtractor(
                     restrict_xpaths='//a[@class="threadtitle"]',
+                    canonicalize=True,
                 ), callback='parsePostsList'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                    restrict_xpaths='//a[@data-t="forum-next"][last()]'
+                    restrict_xpaths='//a[@data-t="forum-next"][last()]',
+                    canonicalize=True,
                 ), follow=True),
         )
 
@@ -43,7 +45,7 @@ class ForumsSpider(CrawlSpider):
         items = []
         topic = response.xpath('//h1/text()').extract_first()
         url = response.url
-
+        condition='epilepsy'
         for post in posts:
             item = PostItemsList()
             item['create_date'] = post.xpath('.//span[@class="x-post-time"]/text()').extract_first()
@@ -53,7 +55,7 @@ class ForumsSpider(CrawlSpider):
                 if not item['author']:
                     item['author'] = post.xpath('.//a[@data-t="post-usersntxt"]/text()').extract_first()
                     item['author_link'] = post.xpath('.//a[@data-t="post-usersntxt"]/@href').extract_first()
-                item['condition']='epilepsy'
+                item['condition']=condition
                 item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="x-post-content"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
                 item['tag']='epilepsy'
                 item['topic'] = topic

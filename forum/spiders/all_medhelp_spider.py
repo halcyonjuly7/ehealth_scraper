@@ -16,7 +16,7 @@ import logging
 
 # Spider for crawling Adidas website for shoes
 class ForumsSpider(CrawlSpider):
-    name = "epilepsy_medhelp_spider"
+    name = "all_medhelp_spider"
     allowed_domains = ["www.medhelp.org"]
     start_urls = [
         "http://www.medhelp.org/forums/Epilepsy/show/235",
@@ -28,11 +28,13 @@ class ForumsSpider(CrawlSpider):
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
             Rule(LinkExtractor(
                     restrict_xpaths='//div[@class="fonts_resizable_subject subject_title "]/a',
+                    canonicalize=True,
                 ), callback='parsePostsList'),
 
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                    restrict_xpaths='//div[@id="pagination_nav"]/a[@class="msg_next_page"]'
+                    restrict_xpaths='//div[@id="pagination_nav"]/a[@class="msg_next_page"]',
+                    canonicalize=True,
                 ), follow=True),
         )
 
@@ -40,7 +42,7 @@ class ForumsSpider(CrawlSpider):
     # https://github.com/scrapy/dirbot/blob/master/dirbot/pipelines.py
     def parsePostsList(self,response):
         sel = Selector(response)
-        condition='epilepsy'
+        condition=sel.xpath('//*[@id="community_header"]/div[1]/a[2]/text()').extract_first()
         posts = sel.xpath('//div[@class="post_message_container"]')
         items = []
         topic = response.xpath('//div[@class="question_title"]/text()').extract_first()
@@ -49,10 +51,10 @@ class ForumsSpider(CrawlSpider):
             item = PostItemsList()
             item['author'] = post.xpath('.//div[@class="post_byline"]/a/text()').extract_first()
             item['author_link'] = post.xpath('.//div[@class="post_byline"]/a/@href').extract_first()
-            item['condition']='epilepsy'
+            item['condition']=condition
             item['create_date'] = post.xpath('.//div[@class="post_byline"]/span[@class="byline_date"]/text()').extract_first()
             item['post'] = re.sub('\s+',' '," ".join(post.xpath('.//div[@class="post_message fonts_resizable"]/text()').extract()).replace("\t","").replace("\n","").replace("\r",""))
-            item['tag']='epilepsy'
+            item['tag']=''
             item['topic'] = topic
             item['url']=url
             logging.info(item.__str__)

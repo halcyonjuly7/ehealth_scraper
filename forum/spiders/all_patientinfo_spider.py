@@ -16,7 +16,7 @@ import logging
 
 # Spider for crawling Adidas website for shoes
 class ForumsSpider(CrawlSpider):
-    name = "epilepsy_patientinfo_spider"
+    name = "all_patientinfo_spider"
     allowed_domains = ["patient.info"]
     start_urls = [
         "http://patient.info/forums/discuss/browse/epilepsy-801",
@@ -28,10 +28,12 @@ class ForumsSpider(CrawlSpider):
             # configuration pages that aren't scrapeable (and are mostly redundant anyway)
             Rule(LinkExtractor(
                     restrict_xpaths='//ul[@class="thread-list"]/li//h3/a',
+                    canonicalize=True,
                 ), callback='parsePostsList'),
             # Rule to follow arrow to next product grid
             Rule(LinkExtractor(
-                    restrict_xpaths='//a[@class="reply-ctrl-wrap reply-ctrl-last"][last()]'
+                    restrict_xpaths='//a[@class="reply-ctrl-wrap reply-ctrl-last"][last()]',
+                    canonicalize=True,
                 ), follow=True),
         )
 
