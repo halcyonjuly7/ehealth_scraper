@@ -24,8 +24,8 @@ class Searcher(object):
         :return: Null
         """
         self.driver = webdriver.Firefox()
-        self.email = ""
-        self.password = ""
+        self.email = email
+        self.password = password
 #         self.profile_name = "zuck"            # this will end up being the facebook user name
         self.count = 0                      # counter of number of elements deleted
         self.wait = wait
@@ -56,15 +56,25 @@ class Searcher(object):
     def search(self,keyword):
         self.driver.get('https://www.facebook.com/search/str/'+keyword+'/keywords_pages')
         sleep(self.wait)
-        
+    
+    def _get_page_id(self, id_object):
+        page_id = id_object.get_attribute("href").split("/").pop(-2)
+        return page_id
+
+    def _is_it_end_of_page(self):
+        self.driver.find_element_by_xpath(".//*[@id='browse_end_of_results_footer']/div/div/div")
     
     def collect_pageids(self):
-        soup = BeautifulSoup(self.driver.page_source)
         # TODO: need to pick out each of the page's link (and the group name), just log them to screen
         # consider the delete_element method as an example
         # For example: https://www.facebook.com/search/str/epilepsy/keywords_pages
         # has "EpilepsySociety", and "epilepsysupports", etc as list of page ids
         #logging.info(pageid)
+        page_id_xpath = ".//*[@class='_gll']/a"
+        page_id = self.driver.find_elements_by_xpath(page_id_xpath)
+        page_id = list(map(self._get_page_id, page_id))
+        return page_id
+        
         
     def go_to_activity_page(self):
         """
@@ -149,18 +159,12 @@ if __name__ == '__main__':
     # track failures
     fail_count = 0
     while True:
-        if fail_count >= 3:
-            print ('[*] Scrolling down')
-            searcher.scroll_down()
-            fail_count = 0
-            sleep(5)
         try:
-            print ('[*] Trying to collect pageids ')
-            searcher.collect_pageids()
-            fail_count = 0
-        except (Exception, ) as e:
-            print ('[-] Problem finding element')
-            fail_count += 1
-            sleep(2)
+            searcher._is_it_end_of_page()
+            for id in searcher.collect_pageids():
+                print(id)
+            searcher.driver.close()
+        except:
+            searcher.scroll_down()
     searcher.driver.close()
 
